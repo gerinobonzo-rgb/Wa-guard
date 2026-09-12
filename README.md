@@ -76,6 +76,18 @@ On first run, a QR code prints to your terminal. Scan it from WhatsApp → Linke
 - `data/warnings.json` persists warning counts across restarts; delete it to reset everyone.
 - Antispam counters are in-memory only and reset on restart by design (a rate limiter shouldn't punish someone for activity before a crash).
 
+### Running with Docker
+
+```bash
+mkdir -p auth_info data
+sudo chown -R 1001:1001 auth_info data   # container runs as uid 1001, non-root
+docker compose up -d --build
+docker compose logs -f                    # scan the QR code shown here
+```
+
+The container publishes no ports (outbound-only), runs as a non-root user, and mounts `auth_info/`, `data/`, and `config.json` from the host so your session/config survive rebuilds. `docker compose down && docker compose up -d` will reconnect using the saved session — no need to re-scan the QR unless you log out from the WhatsApp app or delete `auth_info/`.
+
+
 ## What this does *not* do
 
 - No mass-kick / mass-message tooling (footgun risk, deliberately omitted).

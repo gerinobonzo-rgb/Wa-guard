@@ -1,6 +1,7 @@
 "use strict";
 
 const path = require("path");
+const qrcode = require("qrcode-terminal");
 const {
   default: makeWASocket,
   useMultiFileAuthState,
@@ -133,15 +134,20 @@ async function start() {
   const sock = makeWASocket({
     version,
     auth: state,
-    logger,
-    printQRInTerminal: true,
+    logger: logger.quiet,
     browser: ["wa-guard", "Chrome", "1.0.0"]
   });
 
   sock.ev.on("creds.update", saveCreds);
 
   sock.ev.on("connection.update", (update) => {
-    const { connection, lastDisconnect } = update;
+    const { connection, lastDisconnect, qr } = update;
+
+    if (qr) {
+      logger.info("Scan this QR code from WhatsApp → Linked Devices:");
+      qrcode.generate(qr, { small: true });
+    }
+
     if (connection === "close") {
       const statusCode = new Boom(lastDisconnect?.error)?.output?.statusCode;
       const shouldReconnect = statusCode !== DisconnectReason.loggedOut;

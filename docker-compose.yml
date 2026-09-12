@@ -1,0 +1,27 @@
+services:
+  wa-guard:
+    build: .
+    image: wa-guard:local
+    container_name: wa-guard
+    restart: unless-stopped
+    # No ports published: the bot only makes outbound connections to
+    # WhatsApp's servers (via Baileys' websocket), it never listens on one.
+    volumes:
+      # WhatsApp session credentials — equivalent to your login. Persist
+      # across container restarts/rebuilds, and NEVER commit this to git.
+      - ./auth_info:/app/auth_info
+      # Warning counts (antilink/wordlock/antispam strikes per user).
+      - ./data:/app/data
+      # Mount your edited config directly so you can tweak thresholds/words
+      # without rebuilding the image. Read-only from the container's view.
+      - ./config.json:/app/config.json:ro
+    environment:
+      # "debug" | "info" (default). Debug logs every message evaluated.
+      - LOG_LEVEL=info
+    logging:
+      driver: json-file
+      options:
+        # Keep container logs bounded — avoids silently filling disk on a
+        # long-running bot (a lesson learned the hard way on small VPS boxes).
+        max-size: "10m"
+        max-file: "3"
