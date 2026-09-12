@@ -1,0 +1,28 @@
+{
+  "prefix": ".",
+  "ownerNumbers": ["<YOUR_NUMBER_WITH_COUNTRY_CODE>"],
+  "defaults": {
+    "antilink": {
+      "enabled": true,
+      "allowedDomains": [],
+      "warnLimit": 3,
+      "action": "kick"
+    },
+    "wordlock": {
+      "enabled": true,
+      "words": ["chat.whatsapp.com", "click here", "free money", "earn from home"],
+      "action": "delete"
+    },
+    "antispam": {
+      "enabled": true,
+      "windowMs": 4000,
+      "maxMessages": 6,
+      "burstMs": 1000,
+      "burstMax": 8,
+      "action": "warn",
+      "warnLimit": 3
+    },
+    "adminsImmune": true
+  },
+  "groups": {}
+}
