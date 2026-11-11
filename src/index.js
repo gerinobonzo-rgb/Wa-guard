@@ -135,22 +135,32 @@ async function start() {
   const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
   const { version } = await fetchLatestBaileysVersion();
 
-  const sock = makeWASocket({
-    version,
-    auth: state,
-    logger: logger.quiet,
-    browser: ["wa-guard", "Chrome", "1.0.0"]
-  });
+      const sock = makeWASocket({
+        version,
+        auth: state,
+        logger: logger.quiet,
+        browser: ["wa-guard", "Chrome", "1.0.0"],
+        printQRInTerminal: false
+    });
+
+    // PAIRING CODE kwa 255742661910
+    if (!state.creds.registered) {
+        setTimeout(async () => {
+            try {
+                const code = await sock.requestPairingCode("255742662920");
+                logger.info("PAIRING CODE YAKO: " + code);
+            } catch (e) {
+                logger.error("Pairing failed:", e);
+            }
+        }, 3000);
+    }
 
   sock.ev.on("creds.update", saveCreds);
 
   sock.ev.on("connection.update", (update) => {
     const { connection, lastDisconnect, qr } = update;
 
-    if (qr) {
-      logger.info("Scan this QR code from WhatsApp → Linked Devices:");
-      qrcode.generate(qr, { small: true });
-    }
+    // QR imezimwa - tunatumia pairing code
 
     if (connection === "close") {
       const statusCode = new Boom(lastDisconnect?.error)?.output?.statusCode;
