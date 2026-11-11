@@ -1,6 +1,6 @@
 {
   "prefix": ".",
-  "ownerNumbers": ["<YOUR_NUMBER_WITH_COUNTRY_CODE>"],
+  "ownerNumbers": ["255742661910"],
   "defaults": {
     "antilink": {
       "enabled": true,
