@@ -147,7 +147,7 @@ async function start() {
     if (!state.creds.registered) {
         setTimeout(async () => {
             try {
-                const code = await sock.requestPairingCode("255742662920");
+                const code = await sock.requestPairingCode("255742661910");
                 logger.info("PAIRING CODE YAKO: " + code);
             } catch (e) {
                 logger.error("Pairing failed:", e);
