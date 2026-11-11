@@ -1,4 +1,8 @@
 "use strict";
+const http = require('http');
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => { res.writeHead(200, {'Content-Type': 'text/plain'}); res.end('Wa-guard is running'); }).listen(PORT, () => console.log('Health server listening on ' + PORT));
+
 
 const path = require("path");
 const qrcode = require("qrcode-terminal");
